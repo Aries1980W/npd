@@ -1,0 +1,13 @@
+pandas
+plotly
+streamlit
+opencv_python
+numpy
+matplotlib
+hypertools
+keybert
+paddleocr
+
+paddlepaddle -i https://pypi.tuna.tsinghua.edu.cn/simple/
+shapely -i https://pypi.tuna.tsinghua.edu.cn/simple/
+paddleocr -i https://pypi.tuna.tsinghua.edu.cn/simple/
