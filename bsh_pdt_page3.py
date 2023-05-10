@@ -153,7 +153,7 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) 
-     st.write(response.text)
+    st.write(response.text)
 
     pic_url_desc='https:'+ re.findall("desc: \'(.*?)',",response.text)[0]          #获取图片页面的信息
     # print(pic_url_desc)
