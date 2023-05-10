@@ -207,8 +207,8 @@ def get_pdt_detail(key_word):
         # st.write(pic_code)
         # st.write(result)
         result = reader.readtext(download)
-        # for re in result:
-        #     st.write(re)
+        for re in result:
+            st.write(re)
 
         temp=[]
         
