@@ -153,9 +153,10 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) 
-    st.write(response.text)
+    
 
     pic_url_desc='https:'+ re.findall("desc: \'(.*?)',",response.text)[0]          #获取图片页面的信息
+    st.write(response.text)
     
    
     pdt_info=html.xpath('//ul[starts-with(@class,"parameter2 p-parameter-list")]/li/text()') #获取产品描述信息
