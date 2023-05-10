@@ -153,7 +153,7 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) 
-    st.write(response.text)
+    
 
     pic_url_desc='https:'+ re.findall("desc: \'(.*?)',",response.text)[0]          #获取图片页面的信息
     # print(pic_url_desc)
@@ -171,6 +171,7 @@ def get_pdt_detail(key_word):
         dzdp2=f.read()
     html = etree.HTML(response.text) #把源文件再格式化，可以用xpath, 否则不能用
     result=etree.tostring(html)
+    st.write(response.text)
 
     df_pdt=pd.DataFrame({})
     pic_url=[]  #存储所有页面里的图片
