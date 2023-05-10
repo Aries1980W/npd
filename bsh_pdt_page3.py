@@ -189,7 +189,7 @@ def get_pdt_detail(key_word):
             a.replace('gif','jpg')
             a='https://img'+ i
             pic_url.append(a)#             print('这个图片的url地址是___:', a)
-    
+    st.write(pic_url)
     pic_code=0
     # if os.path.exists(path2):
     kw_word=[]
