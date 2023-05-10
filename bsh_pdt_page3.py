@@ -140,7 +140,7 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) #把源文件再格式化，可以用xpath, 否则不能用
-    
+    st.write(response.text)
 
     pdt_urls=html.xpath('//div[starts-with(@class,"p-name p-name-type-2")]/a/@href')  #把页面里的所有产品的url down下来  
     pdt_url=['https:'+i for i in pdt_urls]
