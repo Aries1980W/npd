@@ -8,7 +8,6 @@ keybert
 torch
 torchvision
 torchaudio
-pytorch-cuda=11.7
 easyocr
 xpinyin -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 lxml
