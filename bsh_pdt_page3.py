@@ -513,93 +513,94 @@ for key_word in pdt_code:
         st.dataframe(kw_bert_final,height=600,use_container_width=True)
 
 
-        # st.write('-----产品灵感------------------------------')
+#         # st.write('-----产品灵感------------------------------')
 
-        df_neg=pd.DataFrame({})
-        df_neg['Document']=pd.DataFrame(df_pdt_detail['txts'].values.tolist()[0].split(','))
+#         df_neg=pd.DataFrame({})
+#         df_neg['Document']=pd.DataFrame(df_pdt_detail['txts'].values.tolist()[0].split(','))
 
-        for i in dropword:
-            df_neg['Document']=df_neg['Document'].apply(lambda x: str(x) if str(x).count(i)==0 else '')
+#         for i in dropword:
+#             df_neg['Document']=df_neg['Document'].apply(lambda x: str(x) if str(x).count(i)==0 else '')
 
-        df_neg['Document']=df_neg['Document'].apply(lambda x: re.sub("[③②a-zA-Z0-9\s+\.\-\!\/_,$-%^*(+']+|[+——！℃=☆★×·，·。？、：；;《》“”~@#￥%……&*（）]+",'',str(x)))   # 去除标点及特殊符号
-        df_neg['Document']=df_neg['Document'].apply(lambda x: str(x) if len(x)>4 else '') #长度为1的字符
-        df_neg.drop_duplicates(subset=['Document'],inplace=True)
-        df_neg=df_neg[df_neg['Document']!='']
-        df_neg.reset_index(drop=True,inplace=True)
-        st.write(df_neg)
+#         df_neg['Document']=df_neg['Document'].apply(lambda x: re.sub("[③②a-zA-Z0-9\s+\.\-\!\/_,$-%^*(+']+|[+——！℃=☆★×·，·。？、：；;《》“”~@#￥%……&*（）]+",'',str(x)))   # 去除标点及特殊符号
+#         df_neg['Document']=df_neg['Document'].apply(lambda x: str(x) if len(x)>4 else '') #长度为1的字符
+#         df_neg.drop_duplicates(subset=['Document'],inplace=True)
+#         df_neg=df_neg[df_neg['Document']!='']
+#         df_neg.reset_index(drop=True,inplace=True)
+#         st.write(df_neg)
             
-        sentences = df_neg['Document'].values
-        sentence_embeddings = model.encode(sentences)
+#         sentences = df_neg['Document'].values
 
-        @st.cache_data
-        def cluster_cal(df_neg,num_clusters,sentence_embeddings): 
-            # 使用 K-Means 对句子向量进行聚类
-            from sklearn.cluster import AgglomerativeClustering
-            cluster = AgglomerativeClustering(n_clusters=num_clusters, affinity='cosine', linkage='complete')
-            clusters = cluster.fit_predict(sentence_embeddings)
+#         sentence_embeddings = model.encode(sentences)
 
-            b=hyp.plot(sentence_embeddings,size=[6,6],fmt='-',ndims=3,n_clusters=num_clusters,reduce='UMAP',) 
-            # print(b.xform_data[0].shape)
+#         @st.cache_data
+#         def cluster_cal(df_neg,num_clusters,sentence_embeddings): 
+#             # 使用 K-Means 对句子向量进行聚类
+#             from sklearn.cluster import AgglomerativeClustering
+#             cluster = AgglomerativeClustering(n_clusters=num_clusters, affinity='cosine', linkage='complete')
+#             clusters = cluster.fit_predict(sentence_embeddings)
 
-            vectors_x=b.xform_data[0][:,0]
-            vectors_y=b.xform_data[0][:,1]    
+#             b=hyp.plot(sentence_embeddings,size=[6,6],fmt='-',ndims=3,n_clusters=num_clusters,reduce='UMAP',) 
+#             # print(b.xform_data[0].shape)
+
+#             vectors_x=b.xform_data[0][:,0]
+#             vectors_y=b.xform_data[0][:,1]    
             
-            df_neg['clusters']=pd.DataFrame(clusters)
-            df_neg['vectors_x']=pd.DataFrame(vectors_x)
-            df_neg['vectors_y']=pd.DataFrame(vectors_y)
+#             df_neg['clusters']=pd.DataFrame(clusters)
+#             df_neg['vectors_x']=pd.DataFrame(vectors_x)
+#             df_neg['vectors_y']=pd.DataFrame(vectors_y)
 
-            cluster_num,labels=[],[]
-            dfname=pd.DataFrame({})
-            for i in range(num_clusters):
-            #     print(i)
-                if len(df_neg[df_neg['clusters']==i]['Document'].values.tolist())>6:
-                    cluster_num.append(i)
-                    label=(' | ').join(random.sample(df_neg[df_neg['clusters']==i]['Document'].values.tolist(),2))
-                    labels.append(label)
-                else:
-                    cluster_num.append(i)
-                    label=(' | ').join(random.sample(df_neg[df_neg['clusters']==i]['Document'].values.tolist(),1))
-                    labels.append(label)
-            dfname['clusters']=pd.DataFrame(cluster_num)
-            dfname['labels']=pd.DataFrame(labels)
-            df_neg=df_neg.merge(dfname,how='left',on='clusters')
+#             cluster_num,labels=[],[]
+#             dfname=pd.DataFrame({})
+#             for i in range(num_clusters):
+#             #     print(i)
+#                 if len(df_neg[df_neg['clusters']==i]['Document'].values.tolist())>6:
+#                     cluster_num.append(i)
+#                     label=(' | ').join(random.sample(df_neg[df_neg['clusters']==i]['Document'].values.tolist(),2))
+#                     labels.append(label)
+#                 else:
+#                     cluster_num.append(i)
+#                     label=(' | ').join(random.sample(df_neg[df_neg['clusters']==i]['Document'].values.tolist(),1))
+#                     labels.append(label)
+#             dfname['clusters']=pd.DataFrame(cluster_num)
+#             dfname['labels']=pd.DataFrame(labels)
+#             df_neg=df_neg.merge(dfname,how='left',on='clusters')
 
-            table=pd.pivot_table(df_neg,values=['vectors_x','vectors_y'],index='labels',aggfunc=np.mean) #,,columns=
+#             table=pd.pivot_table(df_neg,values=['vectors_x','vectors_y'],index='labels',aggfunc=np.mean) #,,columns=
         
-            n=0
-            table=pd.pivot_table(df_neg,values=['vectors_x','vectors_y'],index='labels',aggfunc=np.mean) #,,columns=
+#             n=0
+#             table=pd.pivot_table(df_neg,values=['vectors_x','vectors_y'],index='labels',aggfunc=np.mean) #,,columns=
 
-            import plotly_express as px  
-            import plotly.graph_objects as go
-            var=globals()
+#             import plotly_express as px  
+#             import plotly.graph_objects as go
+#             var=globals()
             
-            var['fig'+str(n)] = px.scatter(table,x='vectors_x',y='vectors_y',size_max=40,text=table.index,#facet_col='color', ## ,marker = dict(color=color0)  color='color',
-                            ) #,color_discrete_sequence=px.colors.qualitative.T10   color_discrete_map={"size_index>130":"Darkred",">80 $ <100":"Orange","<80":"Grey"} ,size='score'
-            var['fig'+str(n)].update_layout(height=850,width=2000,template="plotly")#     plot_bgcolor='rgba(0,0,0,0)',
-            var['fig'+str(n)].update_traces(textfont_size=12, textposition="top center", cliponaxis=False)  
-            # # var['fig'+str(n)].update_yaxes(range=[-3000,4000])
-            # st.plotly_chart(var['fig'+str(n)],use_container_width=True)
+#             var['fig'+str(n)] = px.scatter(table,x='vectors_x',y='vectors_y',size_max=40,text=table.index,#facet_col='color', ## ,marker = dict(color=color0)  color='color',
+#                             ) #,color_discrete_sequence=px.colors.qualitative.T10   color_discrete_map={"size_index>130":"Darkred",">80 $ <100":"Orange","<80":"Grey"} ,size='score'
+#             var['fig'+str(n)].update_layout(height=850,width=2000,template="plotly")#     plot_bgcolor='rgba(0,0,0,0)',
+#             var['fig'+str(n)].update_traces(textfont_size=12, textposition="top center", cliponaxis=False)  
+#             # # var['fig'+str(n)].update_yaxes(range=[-3000,4000])
+#             # st.plotly_chart(var['fig'+str(n)],use_container_width=True)
 
-            return df_neg,var['fig'+str(n)]
-
-
-        num_clusters = int(st.number_input('聚类的数量'))
-        df_neg_final,fig=cluster_cal(df_neg,num_clusters,sentence_embeddings)
-
-        theme_plotly = None 
+#             return df_neg,var['fig'+str(n)]
 
 
-        df_neg_final=df_neg_final[['clusters','Document','labels']]
-        col1, col2,col3 = st.columns([1.5,1.5,3],gap='small')
-        with col1:
-            for i in range(0,int(num_clusters/2)):
-                st.dataframe(df_neg_final[df_neg_final['clusters']==i],height=250,use_container_width=True)
-        with col2:
-            for i in range(int(num_clusters/2),num_clusters):
-                st.dataframe(df_neg_final[df_neg_final['clusters']==i],height=250,use_container_width=True)
+#         num_clusters = int(st.number_input('聚类的数量'))
+#         df_neg_final,fig=cluster_cal(df_neg,num_clusters,sentence_embeddings)
 
-        with col3:
-            st.plotly_chart(fig,use_container_width=True, width=900, height=1100, theme=theme_plotly)
+#         theme_plotly = None 
+
+
+#         df_neg_final=df_neg_final[['clusters','Document','labels']]
+#         col1, col2,col3 = st.columns([1.5,1.5,3],gap='small')
+#         with col1:
+#             for i in range(0,int(num_clusters/2)):
+#                 st.dataframe(df_neg_final[df_neg_final['clusters']==i],height=250,use_container_width=True)
+#         with col2:
+#             for i in range(int(num_clusters/2),num_clusters):
+#                 st.dataframe(df_neg_final[df_neg_final['clusters']==i],height=250,use_container_width=True)
+
+#         with col3:
+#             st.plotly_chart(fig,use_container_width=True, width=900, height=1100, theme=theme_plotly)
     except Exception as e:
         continue
 
