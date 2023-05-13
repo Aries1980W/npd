@@ -35,9 +35,9 @@ import random
 from keybert import KeyBERT
 kw_model = KeyBERT()
 
-import easyocr
+# import easyocr
 
-reader = easyocr.Reader(['ch_sim', 'en'], gpu=True, model_storage_directory=r'D://streamlit//.EasyOCR//model')
+# reader = easyocr.Reader(['ch_sim', 'en'], gpu=True, model_storage_directory=r'D://streamlit//.EasyOCR//model')
 
 
 ############################################################################
