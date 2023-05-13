@@ -526,10 +526,8 @@ for key_word in pdt_code:
         df_neg.drop_duplicates(subset=['Document'],inplace=True)
         df_neg=df_neg[df_neg['Document']!='']
         df_neg.reset_index(drop=True,inplace=True)
-
         st.write(df_neg)
-
-        
+            
         sentences = df_neg['Document'].values
         sentence_embeddings = model.encode(sentences)
 
