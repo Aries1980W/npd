@@ -5,9 +5,9 @@ numpy
 matplotlib
 hypertools
 keybert
-torch
-torchvision
-torchaudio
 easyocr
 xpinyin -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+torch==1.8.1+cu102 
+torchvision==0.9.1+cu102 
+torchaudio==0.8.1
 lxml
