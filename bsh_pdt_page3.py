@@ -15,8 +15,8 @@ import time
 import pandas as pd
 from PIL import Image
 import io
-# import cv2.cv2 as cv2
 # import cv2
+# import cv2.cv2 as cv
 from urllib.parse import quote,unquote
 from sentence_transformers import SentenceTransformer, util
 from sklearn.manifold import TSNE
@@ -30,12 +30,12 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.metrics.pairwise import cosine_similarity
 import hypertools as hyp
 import random
-# from paddleocr import PaddleOCR, draw_ocr# Paddleocr目前支持中英文、英文、法语、德语、韩语、日语，可以通过修改lang参数进行切换   # 参数依次为`ch`, `en`, `french`, `german`, `korean`, `japan`。
-# ocr = PaddleOCR(use_angle_cls=True, lang="ch") # need to run only once to download and load model into memory
+from paddleocr import PaddleOCR, draw_ocr# Paddleocr目前支持中英文、英文、法语、德语、韩语、日语，可以通过修改lang参数进行切换   # 参数依次为`ch`, `en`, `french`, `german`, `korean`, `japan`。
+ocr = PaddleOCR(use_angle_cls=True, lang="ch") # need to run only once to download and load model into memory
 from keybert import KeyBERT
 kw_model = KeyBERT()
 
-# import easyocr
+import easyocr
 
 # reader = easyocr.Reader(['ch_sim', 'en'], gpu=True, model_storage_directory=r'D://streamlit//.EasyOCR//model')
 
@@ -140,7 +140,7 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) #把源文件再格式化，可以用xpath, 否则不能用
-   
+    
 
     pdt_urls=html.xpath('//div[starts-with(@class,"p-name p-name-type-2")]/a/@href')  #把页面里的所有产品的url down下来  
     pdt_url=['https:'+i for i in pdt_urls]
@@ -153,12 +153,11 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) 
-    st.write(response.text)
+    
 
     pic_url_desc='https:'+ re.findall("desc: \'(.*?)',",response.text)[0]          #获取图片页面的信息
-    st.write(pic_url_desc)
-    
-   
+    # print(pic_url_desc)
+
     pdt_info=html.xpath('//ul[starts-with(@class,"parameter2 p-parameter-list")]/li/text()') #获取产品描述信息
     pdt_info=(',').join(pdt_info)
     # # print(pdt_info)
@@ -172,7 +171,6 @@ def get_pdt_detail(key_word):
         dzdp2=f.read()
     html = etree.HTML(response.text) #把源文件再格式化，可以用xpath, 否则不能用
     result=etree.tostring(html)
-    st.write(response.text)
 
     df_pdt=pd.DataFrame({})
     pic_url=[]  #存储所有页面里的图片
@@ -188,7 +186,6 @@ def get_pdt_detail(key_word):
     else:
         pic_urls=re.findall("//img(.*?)\); height",dzdp2) #         print('这个图片的地址是标准img模式,地址是___:', product_url)
         for i in pic_urls:
-            a.replace('gif','jpg')
             a='https://img'+ i
             pic_url.append(a)#             print('这个图片的url地址是___:', a)
     
@@ -203,26 +200,27 @@ def get_pdt_detail(key_word):
             for chunk in response.iter_content():
                 fd.write(chunk)
         pic_code=pic_code+1
-        # result = ocr.ocr(download, cls=True)
+        result = ocr.ocr(download, cls=True)
         # st.write(result)
         
         # st.write(pic_code)
         # st.write(result)
-        result = reader.readtext(download)
-        for re in result:
-            st.write(re)
+        # result = reader.readtext(download)
+        # for re in result:
+        #     st.write(re)
 
         temp=[]
         
         for line in result:
-                temp.append(line[1])
-        st.write(temp)
+            for text in line:    
+                temp.append(text[1][0])
+        # st.write(temp)
         txts.append(','.join(temp))       # 把一个图片的所有内容装到一个字符串里，方便key bert 解析去掉没有的信息
         # st.write(txts)
         aa= kw_model.extract_keywords((',').join(temp), 
                               keyphrase_ngram_range=(1,1), diversity=1, top_n=5) #use_mmr=True
         kw_word=kw_word + [j[0] for j in aa]
-    # st.write(kw_word) # ['aaa','bbb','ccc'] 还需要再合并，才能装到df里去
+    st.write(kw_word) # ['aaa','bbb','ccc'] 还需要再合并，才能装到df里去
 
     txts=(',').join(txts)
     pic_url=(',').join(pic_url)
