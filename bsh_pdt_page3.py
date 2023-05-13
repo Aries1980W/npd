@@ -36,7 +36,7 @@ from keybert import KeyBERT
 kw_model = KeyBERT()
 from xpinyin import Pinyin
 p=Pinyin()
-model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
+# model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
 
 import easyocr
 
