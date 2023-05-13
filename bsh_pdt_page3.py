@@ -30,14 +30,16 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.metrics.pairwise import cosine_similarity
 import hypertools as hyp
 import random
-from paddleocr import PaddleOCR, draw_ocr# Paddleocr目前支持中英文、英文、法语、德语、韩语、日语，可以通过修改lang参数进行切换   # 参数依次为`ch`, `en`, `french`, `german`, `korean`, `japan`。
-ocr = PaddleOCR(use_angle_cls=True, lang="ch") # need to run only once to download and load model into memory
+# from paddleocr import PaddleOCR, draw_ocr# Paddleocr目前支持中英文、英文、法语、德语、韩语、日语，可以通过修改lang参数进行切换   # 参数依次为`ch`, `en`, `french`, `german`, `korean`, `japan`。
+# ocr = PaddleOCR(use_angle_cls=True, lang="ch") # need to run only once to download and load model into memory
 from keybert import KeyBERT
 kw_model = KeyBERT()
+from xpinyin import Pinyin
+p=Pinyin()
 
 import easyocr
 
-# reader = easyocr.Reader(['ch_sim', 'en'], gpu=True, model_storage_directory=r'D://streamlit//.EasyOCR//model')
+reader = easyocr.Reader(['ch_sim', 'en'], gpu = True, model_storage_directory=r'C:\\Users\\Steven\\.EasyOCR\\model')
 
 
 ############################################################################
@@ -132,7 +134,7 @@ def get_pdt_detail(key_word):
     st.write(key_word,channel)
     aa = quote(key_word, safe=";/?:@&=+$,", encoding="utf-8")
     url='https://search.jd.com/Search?keyword=' + aa + '&enc=utf-8&wq=' + aa + '&pvid=da294005df284f6eb670940cd0660f69'
-
+    st.write(url)
     url1=url
     response = requests.get(url, headers=headers_product)
     with open('dzdp.html',mode='w',encoding='utf-8') as f:                  #打开第一个产品的页面
@@ -153,10 +155,10 @@ def get_pdt_detail(key_word):
     with open ('dzdp.html', mode='r', encoding = 'utf-8') as f:
         dzdp1=f.read()
     html = etree.HTML(response.text) 
-    
+    # st.write(response.text)
 
     pic_url_desc='https:'+ re.findall("desc: \'(.*?)',",response.text)[0]          #获取图片页面的信息
-    # print(pic_url_desc)
+    st.write(pic_url_desc)
 
     pdt_info=html.xpath('//ul[starts-with(@class,"parameter2 p-parameter-list")]/li/text()') #获取产品描述信息
     pdt_info=(',').join(pdt_info)
@@ -166,7 +168,6 @@ def get_pdt_detail(key_word):
     response = requests.get(pic_url_desc,headers=headers_pic)              #获取图片页面
     with open('dzdp2.html',mode='w',encoding='utf-8') as f: 
         f.write(response.text) 
-
     with open ('dzdp2.html', mode='r', encoding = 'utf-8') as f:          #获取图片页面
         dzdp2=f.read()
     html = etree.HTML(response.text) #把源文件再格式化，可以用xpath, 否则不能用
@@ -189,31 +190,39 @@ def get_pdt_detail(key_word):
             a='https://img'+ i
             pic_url.append(a)#             print('这个图片的url地址是___:', a)
     
+    st.write(pic_url)
     pic_code=0
     # if os.path.exists(path2):
     kw_word=[]
+    
     for i in pic_url:
         response=requests.get(i,headers =headers) 
         pic_name = key_word + '_' + str(pic_code) #key_wordEN 
-        download=pic_name + '.jpg'                 #  path2 + '/'+ 
+        st.write(pic_name)
+        download=Pinyin().get_pinyin(pic_name) + '.jpg'                 #  path2 + '/'+ 
         with open(download, 'wb') as fd:
             for chunk in response.iter_content():
                 fd.write(chunk)
         pic_code=pic_code+1
-        result = ocr.ocr(download, cls=True)
+        # result = ocr.ocr(download, cls=True)
         # st.write(result)
         
         # st.write(pic_code)
         # st.write(result)
-        # result = reader.readtext(download)
-        # for re in result:
-        #     st.write(re)
+        
+        try:
+            result = reader.readtext(download,detail=0)
+        except Exception as e:
+            st.write(download)
+            continue
+        
+        for res in result:
+            st.write(res)
 
         temp=[]
         
         for line in result:
-            for text in line:    
-                temp.append(text[1][0])
+            temp.append(line)
         # st.write(temp)
         txts.append(','.join(temp))       # 把一个图片的所有内容装到一个字符串里，方便key bert 解析去掉没有的信息
         # st.write(txts)
@@ -590,37 +599,4 @@ for key_word in pdt_code:
             st.plotly_chart(fig,use_container_width=True, width=900, height=1100, theme=theme_plotly)
     except Exception as e:
         continue
-
-# @st.cache_data
-# def convert_df(df):
-#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
-#     return df.to_csv().encode('utf_8_sig') 
-
-# csv = convert_df(df_neg_final)
-
-# st.download_button(
-#     label="cluster file as CSV",
-#     data=csv,
-#     file_name='df_neg_final.csv',
-#     mime='text/csv',
-# )
-
-
-
-
-
-# st.write('--------------Appendix---------------------')
-# col1, col2, col3, col4, col5 = st.columns(5, gap="small")
-# with col1:
-#     st.dataframe(df_kw.iloc[:20,:],use_container_width=True) #height=500, 
-# with col2:
-#     st.dataframe(df_kw.iloc[20:40,:],use_container_width=True)
-# with col3:
-#    st.dataframe(df_kw.iloc[30:60,:],use_container_width=True)
-# with col4:
-#     st.dataframe(df_kw.iloc[60:80,:],use_container_width=True)
-# with col5:
-#     st.dataframe(df_kw.iloc[80:,:],use_container_width=True)
-
-# st.write('-----------------------------------')
 
