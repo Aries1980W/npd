@@ -36,6 +36,7 @@ from keybert import KeyBERT
 kw_model = KeyBERT()
 from xpinyin import Pinyin
 p=Pinyin()
+model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
 
 import easyocr
 
@@ -501,7 +502,7 @@ for key_word in pdt_code:
         df_kw.drop_duplicates(subset=['txts3'],inplace=True)
         df_kw=df_kw[df_kw['txts3']!='']
         df_kw.reset_index(drop=True,inplace=True)
-        st.write(df_kw)
+#         st.write(df_kw)
 
         kw_bert= kw_model.extract_keywords(','.join(df_kw['txts3'].values.tolist()), 
                                     keyphrase_ngram_range=(8,8), diversity=0.9, top_n=16, use_mmr=True) #
@@ -526,9 +527,9 @@ for key_word in pdt_code:
         df_neg=df_neg[df_neg['Document']!='']
         df_neg.reset_index(drop=True,inplace=True)
 
-        # st.write(df_neg)
+        st.write(df_neg)
 
-        model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
+        
         sentences = df_neg['Document'].values
         sentence_embeddings = model.encode(sentences)
 
