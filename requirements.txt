@@ -1,7 +1,7 @@
 pandas
 plotly
 streamlit
-numpy==1.19.5
+numpy
 matplotlib
 hypertools
 keybert
@@ -10,6 +10,5 @@ torchvision
 torchaudio
 easyocr
 paddlepaddle -i https://mirror.baidu.com/pypi/simple
-paddleocr>=2.0.1
-opencv-python-headless
+paddleocr
 lxml
