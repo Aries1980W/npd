@@ -158,7 +158,7 @@ def get_pdt_detail(key_word):
     # st.write(response.text)
 
     pic_url_desc='https:'+ re.findall("desc: \'(.*?)',",response.text)[0]          #获取图片页面的信息
-    st.write(pic_url_desc)
+    # st.write(pic_url_desc)
 
     pdt_info=html.xpath('//ul[starts-with(@class,"parameter2 p-parameter-list")]/li/text()') #获取产品描述信息
     pdt_info=(',').join(pdt_info)
@@ -196,10 +196,11 @@ def get_pdt_detail(key_word):
     kw_word=[]
     
     for i in pic_url:
+        i.replace('gif','jpg')
         response=requests.get(i,headers =headers) 
-        pic_name = key_word + '_' + str(pic_code) #key_wordEN 
-        st.write(pic_name)
-        download=Pinyin().get_pinyin(pic_name) + '.jpg'                 #  path2 + '/'+ 
+        pic_name = p.get_pinyin(key_word) + '_' + str(pic_code) #key_wordEN 
+        download= pic_name + '.jpg'                 #  path2 + '/'+ 
+        st.write(download)
         with open(download, 'wb') as fd:
             for chunk in response.iter_content():
                 fd.write(chunk)
@@ -216,8 +217,8 @@ def get_pdt_detail(key_word):
             st.write(download)
             continue
         
-        for res in result:
-            st.write(res)
+        # for res in result:
+        #     st.write(res)
 
         temp=[]
         
@@ -271,8 +272,8 @@ else:
     #                (models.models.values.tolist()))
     pdt_code=models.models.values.tolist()
 
-
 st.write(pdt_code)
+
 
 df_pdt_detail_total=pd.DataFrame({})
 for key_word in pdt_code:
@@ -313,176 +314,179 @@ for key_word in pdt_code:
         st.write('-----------------------------------')
 
         st.write(image)
+        
 
         col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12 = st.columns(12, gap="small")
         if image<2:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
         elif image<3:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
         elif image<4:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
         elif image<5:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
         elif image<6:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
         elif image<7:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
         elif image<8:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
             with col7:
-                st.image(Image.open(str(pdt_code[0])+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True  
         elif image<9:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
             with col7:
-                st.image(Image.open(str(pdt_code[0])+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
             with col8:
-                st.image(Image.open(str(pdt_code[0])+'_'+'8'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'8'+'.jpg'))
         elif image<10:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
             with col7:
-                st.image(Image.open(str(pdt_code[0])+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
             with col8:
-                st.image(Image.open(str(pdt_code[0])+'_'+'8'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'8'+'.jpg'))
             with col9:
-                st.image(Image.open(str(pdt_code[0])+'_'+'9'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'9'+'.jpg'))
         elif image<11:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
             with col7:
-                st.image(Image.open(str(pdt_code[0])+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
             with col8:
-                st.image(Image.open(str(pdt_code[0])+'_'+'8'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'8'+'.jpg'))
             with col9:
-                st.image(Image.open(str(pdt_code[0])+'_'+'9'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'9'+'.jpg'))
             with col10:
-                st.image(Image.open(str(pdt_code[0])+'_'+'10'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'10'+'.jpg'))
         elif image<12:
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
             with col7:
-                st.image(Image.open(str(pdt_code[0])+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
             with col8:
-                st.image(Image.open(str(pdt_code[0])+'_'+'8'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'8'+'.jpg'))
             with col9:
-                st.image(Image.open(str(pdt_code[0])+'_'+'9'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'9'+'.jpg'))
             with col10:
-                st.image(Image.open(str(pdt_code[0])+'_'+'10'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'10'+'.jpg'))
             with col11:
-                st.image(Image.open(str(pdt_code[0])+'_'+'11'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'11'+'.jpg'))
         else:
+            st.write(str(p.get_pinyin(key_word)+'_'+'1'+'.jpg'))
             with col1:
-                st.image(Image.open(str(pdt_code[0])+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'1'+'.jpg')) #,width=320 ,use_column_width=True  
             with col2:
-                st.image(Image.open(str(pdt_code[0])+'_'+'2'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'2'+'.jpg'))
             with col3:
-                st.image(Image.open(str(pdt_code[0])+'_'+'3'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'3'+'.jpg'))
             with col4:
-                st.image(Image.open(str(pdt_code[0])+'_'+'4'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'4'+'.jpg'))
             with col5:
-                st.image(Image.open(str(pdt_code[0])+'_'+'5'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'5'+'.jpg'))
             with col6:
-                st.image(Image.open(str(pdt_code[0])+'_'+'6'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'6'+'.jpg'))
             with col7:
-                st.image(Image.open(str(pdt_code[0])+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'7'+'.jpg')) #,width=320 ,use_column_width=True      
             with col8:
-                st.image(Image.open(str(pdt_code[0])+'_'+'8'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'8'+'.jpg'))
             with col9:
-                st.image(Image.open(str(pdt_code[0])+'_'+'9'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'9'+'.jpg'))
             with col10:
-                st.image(Image.open(str(pdt_code[0])+'_'+'10'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'10'+'.jpg'))
             with col11:
-                st.image(Image.open(str(pdt_code[0])+'_'+'11'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'11'+'.jpg'))
             with col12:
-                st.image(Image.open(str(pdt_code[0])+'_'+'12'+'.jpg'))
+                st.image(Image.open(str(p.get_pinyin(key_word))+'_'+'12'+'.jpg'))
 
 
         # st.write('-----主要卖点------------------------------')
@@ -599,4 +603,37 @@ for key_word in pdt_code:
             st.plotly_chart(fig,use_container_width=True, width=900, height=1100, theme=theme_plotly)
     except Exception as e:
         continue
+
+# @st.cache_data
+# def convert_df(df):
+#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
+#     return df.to_csv().encode('utf_8_sig') 
+
+# csv = convert_df(df_neg_final)
+
+# st.download_button(
+#     label="cluster file as CSV",
+#     data=csv,
+#     file_name='df_neg_final.csv',
+#     mime='text/csv',
+# )
+
+
+
+
+
+# st.write('--------------Appendix---------------------')
+# col1, col2, col3, col4, col5 = st.columns(5, gap="small")
+# with col1:
+#     st.dataframe(df_kw.iloc[:20,:],use_container_width=True) #height=500, 
+# with col2:
+#     st.dataframe(df_kw.iloc[20:40,:],use_container_width=True)
+# with col3:
+#    st.dataframe(df_kw.iloc[30:60,:],use_container_width=True)
+# with col4:
+#     st.dataframe(df_kw.iloc[60:80,:],use_container_width=True)
+# with col5:
+#     st.dataframe(df_kw.iloc[80:,:],use_container_width=True)
+
+# st.write('-----------------------------------')
 
