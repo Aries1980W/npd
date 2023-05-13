@@ -11,4 +11,4 @@ torch -i https://download.pytorch.org/whl/cu117
 torchvision -i https://download.pytorch.org/whl/cu117
 torchaudio -i https://download.pytorch.org/whl/cu117
 lxml
-sentence-transformers -U 
+sentence-transformers
