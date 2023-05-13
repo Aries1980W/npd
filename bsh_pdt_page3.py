@@ -501,7 +501,7 @@ for key_word in pdt_code:
         df_kw.drop_duplicates(subset=['txts3'],inplace=True)
         df_kw=df_kw[df_kw['txts3']!='']
         df_kw.reset_index(drop=True,inplace=True)
-
+        st.write(df_kw)
 
         kw_bert= kw_model.extract_keywords(','.join(df_kw['txts3'].values.tolist()), 
                                     keyphrase_ngram_range=(8,8), diversity=0.9, top_n=16, use_mmr=True) #
