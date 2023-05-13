@@ -8,6 +8,6 @@ keybert
 easyocr
 xpinyin -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 torch==2.0.1+cu117 
-torchvision+cu117 
+torchvision==2.0.1+cu117
 torchaudio
 lxml
