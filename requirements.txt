@@ -9,7 +9,7 @@ torch
 torchvision
 torchaudio
 easyocr
-paddlepaddle==2.4.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+paddlepaddle -i https://mirror.baidu.com/pypi/simple
 paddleocr>=2.0.1
 opencv-python-headless
 lxml
