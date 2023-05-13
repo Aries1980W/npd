@@ -191,7 +191,7 @@ def get_pdt_detail(key_word):
             a='https://img'+ i
             pic_url.append(a)#             print('这个图片的url地址是___:', a)
     
-    st.write(pic_url)
+#     st.write(pic_url)
     pic_code=0
     # if os.path.exists(path2):
     kw_word=[]
@@ -201,7 +201,7 @@ def get_pdt_detail(key_word):
         response=requests.get(i,headers =headers) 
         pic_name = p.get_pinyin(key_word) + '_' + str(pic_code) #key_wordEN 
         download= pic_name + '.jpg'                 #  path2 + '/'+ 
-        st.write(download)
+#         st.write(download)
         with open(download, 'wb') as fd:
             for chunk in response.iter_content():
                 fd.write(chunk)
@@ -231,7 +231,7 @@ def get_pdt_detail(key_word):
         aa= kw_model.extract_keywords((',').join(temp), 
                               keyphrase_ngram_range=(1,1), diversity=1, top_n=5) #use_mmr=True
         kw_word=kw_word + [j[0] for j in aa]
-    st.write(kw_word) # ['aaa','bbb','ccc'] 还需要再合并，才能装到df里去
+#     st.write(kw_word) # ['aaa','bbb','ccc'] 还需要再合并，才能装到df里去
 
     txts=(',').join(txts)
     pic_url=(',').join(pic_url)
@@ -288,7 +288,7 @@ for key_word in pdt_code:
         st.dataframe(df_pdt_detail,use_container_width=True )
 
         address=df_pdt_detail['url1'][0]
-        st.write(address)
+#         st.write(address)
 
         col1, col2, col3, col4, col5, col6 = st.columns(6)
         with col1:
