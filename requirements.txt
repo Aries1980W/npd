@@ -1,7 +1,7 @@
 pandas
 plotly
 streamlit
-numpy
+numpy1.19.5
 matplotlib
 hypertools
 keybert
