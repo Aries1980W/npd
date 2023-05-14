@@ -15,8 +15,7 @@ import time
 import pandas as pd
 from PIL import Image
 import io
-# import cv2
-# import cv2.cv2 as cv
+import cv2
 from urllib.parse import quote,unquote
 from sentence_transformers import SentenceTransformer, util
 from sklearn.manifold import TSNE
@@ -30,8 +29,6 @@ from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.metrics.pairwise import cosine_similarity
 import hypertools as hyp
 import random
-# from paddleocr import PaddleOCR, draw_ocr# Paddleocr目前支持中英文、英文、法语、德语、韩语、日语，可以通过修改lang参数进行切换   # 参数依次为`ch`, `en`, `french`, `german`, `korean`, `japan`。
-# ocr = PaddleOCR(use_angle_cls=True, lang="ch") # need to run only once to download and load model into memory
 from keybert import KeyBERT
 kw_model = KeyBERT()
 from xpinyin import Pinyin
@@ -40,8 +37,7 @@ p=Pinyin()
 
 import easyocr
 
-reader = easyocr.Reader(['ch_sim', 'en'], gpu = True, model_storage_directory=r'C:\\Users\\Steven\\.EasyOCR\\model')
-
+reader = easyocr.Reader(['ch_sim', 'en'])
 
 ############################################################################
 dropword = ['红包','吹风机','激活','积分','击领取即可','刀具','套装','京东小家','市型号','原石爆款好评数','累计进入约8万家庭 商品详情页','江苏省','患者禁用','【不良反应】','理性阅读','以上对比','油度检测','侧板固定','物品搬运','结构重构','用户自备','踢脚线','切割封板','水款标识','浊度检测','铰链调整','门板安装','安装建议','水效标识','一级标准','清洁指数','干燥指数','不得安装','点击咨询','底板开','家电家私','点击查看价格','联系方式','随机发送','官方旗舰店','售后', '服务', '京仓', '发货','仓配', '出库', '授权', '风险', '放心购', '补寄', '配送', '亲们', '仓离', '限时达', '免费补发', '先验货', '再签收','送货', '上门', 
@@ -111,7 +107,7 @@ dropword = ['红包','吹风机','激活','积分','击领取即可','刀具','�
 
 # 产品页的网址 F12 + F5  打开网站得到 url= 'https://item.jd.com/100006287020.html'
 headers_product = {
-    'Cookie': '__jdu=1011272105; PCSYCityID=CN_310000_310100_0; shshshfpb=mY67AKHokSnlK7jfcC2dA_Q; shshshfpa=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; shshshfpx=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; pinId=RaGwmgLCP48RoD9K0aiD6A; pin=yasewang1980; unick=yasewang1980; _tp=lLX4wffka%2Bn0yNGR5f0sXA%3D%3D; _pst=yasewang1980; qrsc=3; user-key=f2bafb09-9194-496d-b0c4-db097b183651; TrackID=1NgBcN3uwL-k7vdVvkgKQoIru8Uqx4rKPXgemEnOtDGSGHkt_Tg3NavCDtOK4-8uM6JJu98qW6rLkcGGitAuW9D7NpURcQ8vjmnXN3FNqprk; ceshi3.com=000; jsavif=1; rkv=1.0; avif=1; unpl=JF8EAK9nNSttC0MEVR5WSUAQHl1RWwkKQ0RTbWUNXQkNTwYNSAEYFRN7XlVdXxRKEx9ubhRXXlNPVQ4ZBCsSEXteXVdZDEsWC2tXVgQFDQ8VXURJQlZAFDNVCV9dSRZRZjJWBFtdT1xWSAYYRRMfDlAKDlhCR1FpMjVkXlh7VAQrAhoSEEhbV15cDHsWM2hXNWRVWEpdAB0yGiIRex8AAlgATR4KImcEVF1bTVcFGgYrEyBI; __jdv=76161171|baidu-pinzhuan|t_288551095_baidupinzhuan|cpc|0f3d30c8dba7459bb52f2eb5eba8ac7d_0_b9aa4ecc1d144e39ba3398ed5c9b2262|1683557437567; thor=B676E39D86228127F49AB34ECE98100788F79A99977CCA10D4B3010773DACDC3180BBE7071544069483FFC723FE99FB8FF2046EB884CCC77CB10E19777FF7685ED7F544E071BE99B5D072F8603623C960F9617D6D9A0D318E62026294918EAE36EB1EE9D31FA5F99008350E35F4D50FBE004C44559D32B34E8C746F9F959383774FE438341E13C98F2698198F8741C6C; 3AB9D23F7A4B3CSS=jdd034EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIEAAAAMH7PL5HHAAAAAADTILDOREVNESBIX; _gia_d=1; areaId=12; ipLoc-djd=12-904-905-0; cn=0; shshshsID=2404b3c2924e3e7e462654ab6c1fd599_9_1683557456558; __jda=122270672.1011272105.1683305989.1683462923.1683556955.6; __jdc=122270672; xapieid=jdd034EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIEAAAAMH7PL5HHAAAAAADTILDOREVNESBIX; jsavif=1; token=978242273f9bbb9d132e6e51f6826594,3,935309; __tk=iMzwnxPOWUyDilnEWUpwnla5iMAMnMAEVlkORlbzVMi,3,935309; __jdb=122270672.20.1011272105|6.1683556955; 3AB9D23F7A4B3C9B=4EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIE',
+    'Cookie': '__jdu=1011272105; shshshfpb=mY67AKHokSnlK7jfcC2dA_Q; shshshfpa=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; shshshfpx=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; pinId=RaGwmgLCP48RoD9K0aiD6A; pin=yasewang1980; unick=yasewang1980; _tp=lLX4wffka%2Bn0yNGR5f0sXA%3D%3D; _pst=yasewang1980; qrsc=3; user-key=f2bafb09-9194-496d-b0c4-db097b183651; areaId=12; ipLoc-djd=12-904-905-0; PCSYCityID=CN_320000_320100_0; unpl=JF8EALBnNSttURhRBRIEGhMQQlhcWw9fGEdWb2ACXA5ZHgQETFAcGxl7XlVdXxRKEx9vYhRUXlNPVw4eACsSEXteXVdZDEsWC2tXVgQFDQ8VXURJQlZAFDNVCV9dSRZRZjJWBFtdT1xWSAYYRRMfDlAKDlhCR1FpMjVkXlh7VAQrAhoSEEhbV15cDHsWM2hXNWRUWUpQDRkyGiIRex8AAlUMQhYEaCoFVV1YSFIGGwMfIhF7Xg; TrackID=1UusVxEdwJhXnr0dOp18txHM4GqIY_hRNw4DTBPZYLJWn8zOKvcHyAsKDMkycL8sbQw0vCVBxBB9AfRDjbKRkmjuEaNRy1kE2OLqmotJJVDg; thor=B676E39D86228127F49AB34ECE98100788F79A99977CCA10D4B3010773DACDC3076D3A943BB8D4F953451A9A9DE03DA60F2CF77C39D3E523825EE11182310AD6784D2DD50347D97B82F218475AA66577C007E8309D4FD2143AADEA4A20655EAF84010D7DB1F84FA33E37EB371BC1AE418A0D1523642798CCF17FB796DCF114BFC2F8938813D202F959B3B99BDE923133; flash=2_-T6LdiAbPmwArU2w5GycoSN0iImI6fk0YygZwOL5vEnZ3tfOAP-kkxsrmitc83xMgiJR3eX35OnZxhAkhcJvuy2gTLIlnwq7Z8a9ssJBpzV*; ceshi3.com=000; __jdv=76161171|baidu-pinzhuan|t_288551095_baidupinzhuan|cpc|0f3d30c8dba7459bb52f2eb5eba8ac7d_0_8b41870018494cfbad1669b0da0fc688|1684039969380; 3AB9D23F7A4B3CSS=jdd034EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIEAAAAMIDCNK2AIAAAAADVMDRL22QGNZYMX; _gia_d=1; xapieid=jdd034EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIEAAAAMIDCNK2AIAAAAADVMDRL22QGNZYMX; jsavif=1; jsavif=1; __jda=122270672.1011272105.1683305989.1683968251.1684039964.9; __jdb=122270672.6.1011272105|9.1684039964; __jdc=122270672; shshshsID=d2b22ba7b6e0b49cdeb97b9c5f30864e_1_1684039980631; rkv=1.0; 3AB9D23F7A4B3C9B=4EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIE',
     'Referer': 'https://www.jd.com/',
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36 SE 2.X MetaSr 1.0'
             }
@@ -123,12 +119,11 @@ headers_Comment = {
             }
 #图片页的网址   url2='https://cd.jd.com/description/channel?skuId=10031491110391&mainSkuId=10021060592118&charset=utf-8&cdn=2'
 headers_pic = {
-    'Cookie': '__jdu=1011272105; PCSYCityID=CN_310000_310100_0; shshshfpb=mY67AKHokSnlK7jfcC2dA_Q; shshshfpa=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; shshshfpx=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; pinId=RaGwmgLCP48RoD9K0aiD6A; pin=yasewang1980; unick=yasewang1980; _tp=lLX4wffka%2Bn0yNGR5f0sXA%3D%3D; _pst=yasewang1980; user-key=f2bafb09-9194-496d-b0c4-db097b183651; TrackID=1NgBcN3uwL-k7vdVvkgKQoIru8Uqx4rKPXgemEnOtDGSGHkt_Tg3NavCDtOK4-8uM6JJu98qW6rLkcGGitAuW9D7NpURcQ8vjmnXN3FNqprk; ceshi3.com=000; unpl=JF8EAK9nNSttC0MEVR5WSUAQHl1RWwkKQ0RTbWUNXQkNTwYNSAEYFRN7XlVdXxRKEx9ubhRXXlNPVQ4ZBCsSEXteXVdZDEsWC2tXVgQFDQ8VXURJQlZAFDNVCV9dSRZRZjJWBFtdT1xWSAYYRRMfDlAKDlhCR1FpMjVkXlh7VAQrAhoSEEhbV15cDHsWM2hXNWRVWEpdAB0yGiIRex8AAlgATR4KImcEVF1bTVcFGgYrEyBI; __jdv=76161171|baidu-pinzhuan|t_288551095_baidupinzhuan|cpc|0f3d30c8dba7459bb52f2eb5eba8ac7d_0_b9aa4ecc1d144e39ba3398ed5c9b2262|1683557437567; areaId=12; ipLoc-djd=12-904-905-0; cn=0; shshshsID=2404b3c2924e3e7e462654ab6c1fd599_9_1683557456558; __jda=122270672.1011272105.1683305989.1683462923.1683556955.6; __jdc=122270672; jsavif=1; token=978242273f9bbb9d132e6e51f6826594,3,935309; __tk=iMzwnxPOWUyDilnEWUpwnla5iMAMnMAEVlkORlbzVMi,3,935309; 3AB9D23F7A4B3C9B=4EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIE; 3AB9D23F7A4B3CSS=jdd034EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIEAAAAMH7PM3MQYAAAAADWPRWFV35PKAUIX; _gia_d=1; thor=B676E39D86228127F49AB34ECE98100788F79A99977CCA10D4B3010773DACDC3F47B2379067C2A59C5382B66946237EBEBBA7148B4481E90BDE4F5978988678B3E272F3FE04921FCBFC4275B0973C9AB1A7243AEFDBCC423D79CC1E50141EA91EAB0AC0044881197E04A254308D8AA2D607B910CF243CC340FD64640768289C7DF2CB813DE5BE3EB011F1C77A6E4D054; __jdb=122270672.23.1011272105|6.1683556955',
+    'Cookie': '__jdu=1011272105; shshshfpb=mY67AKHokSnlK7jfcC2dA_Q; shshshfpa=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; shshshfpx=b2fb3533-5999-fc24-2778-6efc70124643-1683140809; pinId=RaGwmgLCP48RoD9K0aiD6A; pin=yasewang1980; unick=yasewang1980; _tp=lLX4wffka%2Bn0yNGR5f0sXA%3D%3D; _pst=yasewang1980; user-key=f2bafb09-9194-496d-b0c4-db097b183651; areaId=12; ipLoc-djd=12-904-905-0; PCSYCityID=CN_320000_320100_0; unpl=JF8EALBnNSttURhRBRIEGhMQQlhcWw9fGEdWb2ACXA5ZHgQETFAcGxl7XlVdXxRKEx9vYhRUXlNPVw4eACsSEXteXVdZDEsWC2tXVgQFDQ8VXURJQlZAFDNVCV9dSRZRZjJWBFtdT1xWSAYYRRMfDlAKDlhCR1FpMjVkXlh7VAQrAhoSEEhbV15cDHsWM2hXNWRUWUpQDRkyGiIRex8AAlUMQhYEaCoFVV1YSFIGGwMfIhF7Xg; TrackID=1UusVxEdwJhXnr0dOp18txHM4GqIY_hRNw4DTBPZYLJWn8zOKvcHyAsKDMkycL8sbQw0vCVBxBB9AfRDjbKRkmjuEaNRy1kE2OLqmotJJVDg; thor=B676E39D86228127F49AB34ECE98100788F79A99977CCA10D4B3010773DACDC3076D3A943BB8D4F953451A9A9DE03DA60F2CF77C39D3E523825EE11182310AD6784D2DD50347D97B82F218475AA66577C007E8309D4FD2143AADEA4A20655EAF84010D7DB1F84FA33E37EB371BC1AE418A0D1523642798CCF17FB796DCF114BFC2F8938813D202F959B3B99BDE923133; flash=2_-T6LdiAbPmwArU2w5GycoSN0iImI6fk0YygZwOL5vEnZ3tfOAP-kkxsrmitc83xMgiJR3eX35OnZxhAkhcJvuy2gTLIlnwq7Z8a9ssJBpzV*; ceshi3.com=000; __jdv=76161171|baidu-pinzhuan|t_288551095_baidupinzhuan|cpc|0f3d30c8dba7459bb52f2eb5eba8ac7d_0_8b41870018494cfbad1669b0da0fc688|1684039969380; 3AB9D23F7A4B3CSS=jdd034EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIEAAAAMIDCNK2AIAAAAADVMDRL22QGNZYMX; _gia_d=1; jsavif=1; __jda=122270672.1011272105.1683305989.1683968251.1684039964.9; __jdc=122270672; 3AB9D23F7A4B3C9B=4EQVFFJXJT67GU4QMOEUJVTELTJ75UQHRN5EVEFFITTAPKUQXB7BWWH4YSVRT5P6QYQBX2MF2SCXE6VS5DEDVMTOIE; token=cd2ca4cb809e9e5bfb017a56dda68431,3,935577; __tk=Xzlnupiovp2EuzboYpTxv3kxZsr3XDuEu3vRZpu0X3a,3,935577; jsavif=1; shshshsID=d2b22ba7b6e0b49cdeb97b9c5f30864e_3_1684040023064; __jdb=122270672.8.1011272105|9.1684039964',
     'User-Agent':'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36 SE 2.X MetaSr 1.0',
     # 'Host': 'cd.jd.com',
     'Referer': 'https://item.jd.com/'
             }
-
 
 @st.cache_data
 def get_pdt_detail(key_word):
@@ -201,7 +196,7 @@ def get_pdt_detail(key_word):
         response=requests.get(i,headers =headers) 
         pic_name = p.get_pinyin(key_word) + '_' + str(pic_code) #key_wordEN 
         download= pic_name + '.jpg'                 #  path2 + '/'+ 
-#         st.write(download)
+        st.write(download)
         with open(download, 'wb') as fd:
             for chunk in response.iter_content():
                 fd.write(chunk)
@@ -316,7 +311,6 @@ for key_word in pdt_code:
 
         st.write(image)
         
-
         col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12 = st.columns(12, gap="small")
         if image<2:
             with col1:
@@ -512,128 +506,5 @@ for key_word in pdt_code:
 
         st.dataframe(kw_bert_final,height=600,use_container_width=True)
 
-
-#         # st.write('-----产品灵感------------------------------')
-
-#         df_neg=pd.DataFrame({})
-#         df_neg['Document']=pd.DataFrame(df_pdt_detail['txts'].values.tolist()[0].split(','))
-
-#         for i in dropword:
-#             df_neg['Document']=df_neg['Document'].apply(lambda x: str(x) if str(x).count(i)==0 else '')
-
-#         df_neg['Document']=df_neg['Document'].apply(lambda x: re.sub("[③②a-zA-Z0-9\s+\.\-\!\/_,$-%^*(+']+|[+——！℃=☆★×·，·。？、：；;《》“”~@#￥%……&*（）]+",'',str(x)))   # 去除标点及特殊符号
-#         df_neg['Document']=df_neg['Document'].apply(lambda x: str(x) if len(x)>4 else '') #长度为1的字符
-#         df_neg.drop_duplicates(subset=['Document'],inplace=True)
-#         df_neg=df_neg[df_neg['Document']!='']
-#         df_neg.reset_index(drop=True,inplace=True)
-#         st.write(df_neg)
-            
-#         sentences = df_neg['Document'].values
-
-#         sentence_embeddings = model.encode(sentences)
-
-#         @st.cache_data
-#         def cluster_cal(df_neg,num_clusters,sentence_embeddings): 
-#             # 使用 K-Means 对句子向量进行聚类
-#             from sklearn.cluster import AgglomerativeClustering
-#             cluster = AgglomerativeClustering(n_clusters=num_clusters, affinity='cosine', linkage='complete')
-#             clusters = cluster.fit_predict(sentence_embeddings)
-
-#             b=hyp.plot(sentence_embeddings,size=[6,6],fmt='-',ndims=3,n_clusters=num_clusters,reduce='UMAP',) 
-#             # print(b.xform_data[0].shape)
-
-#             vectors_x=b.xform_data[0][:,0]
-#             vectors_y=b.xform_data[0][:,1]    
-            
-#             df_neg['clusters']=pd.DataFrame(clusters)
-#             df_neg['vectors_x']=pd.DataFrame(vectors_x)
-#             df_neg['vectors_y']=pd.DataFrame(vectors_y)
-
-#             cluster_num,labels=[],[]
-#             dfname=pd.DataFrame({})
-#             for i in range(num_clusters):
-#             #     print(i)
-#                 if len(df_neg[df_neg['clusters']==i]['Document'].values.tolist())>6:
-#                     cluster_num.append(i)
-#                     label=(' | ').join(random.sample(df_neg[df_neg['clusters']==i]['Document'].values.tolist(),2))
-#                     labels.append(label)
-#                 else:
-#                     cluster_num.append(i)
-#                     label=(' | ').join(random.sample(df_neg[df_neg['clusters']==i]['Document'].values.tolist(),1))
-#                     labels.append(label)
-#             dfname['clusters']=pd.DataFrame(cluster_num)
-#             dfname['labels']=pd.DataFrame(labels)
-#             df_neg=df_neg.merge(dfname,how='left',on='clusters')
-
-#             table=pd.pivot_table(df_neg,values=['vectors_x','vectors_y'],index='labels',aggfunc=np.mean) #,,columns=
-        
-#             n=0
-#             table=pd.pivot_table(df_neg,values=['vectors_x','vectors_y'],index='labels',aggfunc=np.mean) #,,columns=
-
-#             import plotly_express as px  
-#             import plotly.graph_objects as go
-#             var=globals()
-            
-#             var['fig'+str(n)] = px.scatter(table,x='vectors_x',y='vectors_y',size_max=40,text=table.index,#facet_col='color', ## ,marker = dict(color=color0)  color='color',
-#                             ) #,color_discrete_sequence=px.colors.qualitative.T10   color_discrete_map={"size_index>130":"Darkred",">80 $ <100":"Orange","<80":"Grey"} ,size='score'
-#             var['fig'+str(n)].update_layout(height=850,width=2000,template="plotly")#     plot_bgcolor='rgba(0,0,0,0)',
-#             var['fig'+str(n)].update_traces(textfont_size=12, textposition="top center", cliponaxis=False)  
-#             # # var['fig'+str(n)].update_yaxes(range=[-3000,4000])
-#             # st.plotly_chart(var['fig'+str(n)],use_container_width=True)
-
-#             return df_neg,var['fig'+str(n)]
-
-
-#         num_clusters = int(st.number_input('聚类的数量'))
-#         df_neg_final,fig=cluster_cal(df_neg,num_clusters,sentence_embeddings)
-
-#         theme_plotly = None 
-
-
-#         df_neg_final=df_neg_final[['clusters','Document','labels']]
-#         col1, col2,col3 = st.columns([1.5,1.5,3],gap='small')
-#         with col1:
-#             for i in range(0,int(num_clusters/2)):
-#                 st.dataframe(df_neg_final[df_neg_final['clusters']==i],height=250,use_container_width=True)
-#         with col2:
-#             for i in range(int(num_clusters/2),num_clusters):
-#                 st.dataframe(df_neg_final[df_neg_final['clusters']==i],height=250,use_container_width=True)
-
-#         with col3:
-#             st.plotly_chart(fig,use_container_width=True, width=900, height=1100, theme=theme_plotly)
     except Exception as e:
         continue
-
-# @st.cache_data
-# def convert_df(df):
-#     # IMPORTANT: Cache the conversion to prevent computation on every rerun
-#     return df.to_csv().encode('utf_8_sig') 
-
-# csv = convert_df(df_neg_final)
-
-# st.download_button(
-#     label="cluster file as CSV",
-#     data=csv,
-#     file_name='df_neg_final.csv',
-#     mime='text/csv',
-# )
-
-
-
-
-
-# st.write('--------------Appendix---------------------')
-# col1, col2, col3, col4, col5 = st.columns(5, gap="small")
-# with col1:
-#     st.dataframe(df_kw.iloc[:20,:],use_container_width=True) #height=500, 
-# with col2:
-#     st.dataframe(df_kw.iloc[20:40,:],use_container_width=True)
-# with col3:
-#    st.dataframe(df_kw.iloc[30:60,:],use_container_width=True)
-# with col4:
-#     st.dataframe(df_kw.iloc[60:80,:],use_container_width=True)
-# with col5:
-#     st.dataframe(df_kw.iloc[80:,:],use_container_width=True)
-
-# st.write('-----------------------------------')
-
