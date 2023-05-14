@@ -488,15 +488,15 @@ for key_word in pdt_code:
 
         df_kw=pd.DataFrame({})
         df_kw['txts3']=pd.DataFrame(kw_words)
-
+        
         for i in dropword:
             df_kw['txts3']=df_kw['txts3'].apply(lambda x: str(x) if str(x).count(i)==0 else '')
-
+            
         df_kw['txts3']=df_kw['txts3'].apply(lambda x: str(x) if len(x)>4 else '')
         df_kw.drop_duplicates(subset=['txts3'],inplace=True)
         df_kw=df_kw[df_kw['txts3']!='']
         df_kw.reset_index(drop=True,inplace=True)
-#         st.write(df_kw)
+        st.write(df_kw)
 
         kw_bert= kw_model.extract_keywords(','.join(df_kw['txts3'].values.tolist()), 
                                     keyphrase_ngram_range=(1,1), diversity=1, top_n=20) #, use_mmr=True
