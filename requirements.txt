@@ -8,7 +8,6 @@ keybert
 easyocr
 xpinyin -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 torch -i https://download.pytorch.org/whl/cu117 
-torchvision -i https://download.pytorch.org/whl/cu117
-torchaudio -i https://download.pytorch.org/whl/cu117
+torchvision
+torchaudio
 lxml
-sentence-transformers
