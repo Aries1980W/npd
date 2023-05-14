@@ -499,7 +499,7 @@ for key_word in pdt_code:
 #         st.write(df_kw)
 
         kw_bert= kw_model.extract_keywords(','.join(df_kw['txts3'].values.tolist()), 
-                                    keyphrase_ngram_range=(8,8), diversity=0.9, top_n=16, use_mmr=True) #
+                                    keyphrase_ngram_range=(1,1), diversity=1, top_n=20) #, use_mmr=True
 
         kw_bert_final=pd.DataFrame({})
         kw_bert_final['txts3'] = pd.DataFrame([j[0] for j in kw_bert])
